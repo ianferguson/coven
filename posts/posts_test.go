@@ -23,7 +23,7 @@ func TestSummary(t *testing.T) {
 	}
 
 	summary := post.Summary()
-	expected := "My New Blog: Exciting Blog Post, posted just a moment ago, 42 comments"
+	expected := "Exciting Blog Post, posted on My New Blog just a moment ago"
 	if summary != expected {
 		t.Errorf("post.Summary(%q) => %q, want %q", post, summary, expected)
 	}

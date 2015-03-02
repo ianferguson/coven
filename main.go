@@ -21,7 +21,9 @@ func main() {
 		}
 
 		for _, post := range posts {
-			fmt.Println(post.Summary())
+			fmt.Printf("%v:\n", post.Summary())
+			fmt.Printf("\tarticle: %v\n", post.URL)
+			fmt.Printf("\tcomments(%v): %v\n\n", post.CommentCount, post.Comments)
 		}
 	}
 

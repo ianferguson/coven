@@ -1,4 +1,4 @@
-// package posts contains methods for retrieving selections of posts from the coven api
+// Package posts contains methods for retrieving selections of posts from the coven api
 package posts
 
 import (
@@ -29,7 +29,7 @@ type Post struct {
 // Summary returns a one line string summary of information relevant to the post
 func (p *Post) Summary() string {
 	posted := prettyPrint(p.ExternalCreatedAt)
-	return fmt.Sprintf("%v: %v, posted %v, %v comments", p.Source, p.Title, posted, p.CommentCount)
+	return fmt.Sprintf("%v, posted on %v %v", p.Title, p.Source, posted)
 }
 
 func prettyPrint(t *time.Time) string {
