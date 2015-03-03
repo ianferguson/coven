@@ -20,20 +20,30 @@ func main() {
 	app.Email = "ian@labmarie.com"
 	app.Version = "0.1"
 	app.Action = func(c *cli.Context) {
-		posts, err := posts.Get(12)
+		p, err := posts.Newest(12)
 		if err != nil {
 			panic(err)
 		}
+		printPosts("Newest Posts", p)
 
-		for _, post := range posts {
-			fmt.Printf("%v:\n", post.Summary())
-			fmt.Printf("\tarticle: %v\n", blue(post.URL))
-			fmt.Printf("\tcomments(%v): %v\n\n", post.CommentCount, blue(post.Comments))
+		p, err = posts.MostDiscussed(4)
+		if err != nil {
+			panic(err)
 		}
+		printPosts("Most Discussed", p)
 	}
 
 	err := app.Run(os.Args)
 	if err != nil {
 		fmt.Errorf("%v", err)
+	}
+}
+
+func printPosts(title string, p posts.Posts) {
+	fmt.Printf("%v\n-------------------------\n", title)
+	for _, post := range p {
+		fmt.Printf("%v:\n", post.Summary())
+		fmt.Printf("\tarticle: %v\n", blue(post.URL))
+		fmt.Printf("\tcomments(%v): %v\n\n", post.CommentCount, blue(post.Comments))
 	}
 }
