@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"sort"
 	"time"
 )
 
@@ -32,6 +33,34 @@ func (p *Post) Summary() string {
 	return fmt.Sprintf("%v, posted on %v %v", p.Title, p.Source, posted)
 }
 
+// Posts is a slice of Post pointers that facilitates operations such as sorting the incoming post
+// groups by their post date, etc
+type Posts []*Post
+
+// Len supports the sort.Interface methods needed to sort Posts
+func (s Posts) Len() int {
+	return len(s)
+}
+
+// Swap supports the sort.Interface methods needed to sort Posts
+func (s Posts) Swap(i, j int) {
+	s[i], s[j] = s[j], s[i]
+}
+
+// ByExternalCreatedAt implements sort.Interface by providing Less and using the Len and
+// Swap methods of the embedded Organs value.
+type ByExternalCreatedAt struct {
+	Posts
+}
+
+// Less compares two posts, return true if the post at index 'i' has a ExternalDateCreatedAt value that is greater than the
+// post at index 'j'. i.e. Compare two posts by their external created at date, descending
+func (s ByExternalCreatedAt) Less(i, j int) bool {
+	iTime := *s.Posts[i].ExternalCreatedAt
+	jTime := *s.Posts[j].ExternalCreatedAt
+	return iTime.Sub(jTime).Seconds() > 0
+}
+
 func prettyPrint(t *time.Time) string {
 	since := time.Since(*t)
 	switch {
@@ -48,7 +77,7 @@ func prettyPrint(t *time.Time) string {
 }
 
 // GetAll retrieves all posts currently available via the coven api
-func GetAll() ([]Post, error) {
+func GetAll() (Posts, error) {
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err
@@ -60,17 +89,19 @@ func GetAll() ([]Post, error) {
 		return nil, err
 	}
 
-	var posts []Post
+	var posts Posts
 	err = json.Unmarshal(body, &posts)
 	if err != nil {
 		return nil, err
 	}
 
+	sort.Sort(ByExternalCreatedAt{posts})
+
 	return posts, nil
 }
 
 // Get returns the most recent number of posts up to the number specified in the limit parameter
-func Get(limit int) ([]Post, error) {
+func Get(limit int) (Posts, error) {
 	posts, err := GetAll()
 	if err != nil {
 		return nil, err

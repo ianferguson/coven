@@ -1,6 +1,7 @@
 package posts
 
 import (
+	"sort"
 	"testing"
 	"time"
 )
@@ -9,7 +10,11 @@ func TestGetPosts(t *testing.T) {
 	posts, _ := Get(10)
 
 	if len(posts) != 10 {
-		t.Errorf("found %v posts", len(posts))
+		t.Errorf("found %v posts instead of %v posts", len(posts), 10)
+	}
+
+	if !sort.IsSorted(ByExternalCreatedAt{posts}) {
+		t.Errorf("Posts were not properly sorted by external created at date")
 	}
 }
 

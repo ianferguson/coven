@@ -6,7 +6,12 @@ import (
 
 	"github.com/codegangsta/cli"
 	"github.com/ianferguson/coven/posts"
+	"github.com/ianferguson/rgbterm"
 )
+
+func blue(s string) string {
+	return rgbterm.FgString(s, 6, 69, 173)
+}
 
 func main() {
 	app := cli.NewApp()
@@ -22,8 +27,8 @@ func main() {
 
 		for _, post := range posts {
 			fmt.Printf("%v:\n", post.Summary())
-			fmt.Printf("\tarticle: %v\n", post.URL)
-			fmt.Printf("\tcomments(%v): %v\n\n", post.CommentCount, post.Comments)
+			fmt.Printf("\tarticle: %v\n", blue(post.URL))
+			fmt.Printf("\tcomments(%v): %v\n\n", post.CommentCount, blue(post.Comments))
 		}
 	}
 
