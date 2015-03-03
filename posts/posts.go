@@ -48,7 +48,7 @@ func (s Posts) Swap(i, j int) {
 }
 
 // ByExternalCreatedAt implements sort.Interface by providing Less and using the Len and
-// Swap methods of the embedded Organs value.
+// Swap methods of the embedded Posts value.
 type ByExternalCreatedAt struct {
 	Posts
 }
