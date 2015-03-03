@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/aybabtme/rgbterm"
 	"github.com/codegangsta/cli"
 	"github.com/ianferguson/coven/posts"
-	"github.com/ianferguson/rgbterm"
 )
 
 func blue(s string) string {
